@@ -14,15 +14,17 @@
 
     <style>
         /* ================================================= */
-        /* === Variabel dan Gaya Dasar (Diadaptasi dari TEMA BARU.html) === */
+        /* === Variabel dan Gaya Dasar === */
         /* ================================================= */
         :root {
             --bg-primary: #f0f0f5; /* Latar belakang utama yang terang */
-            --bg-card: rgba(255, 255, 255, 0.6); /* Latar belakang kartu transparan */
+            --bg-card: rgba(255, 255, 255, 0.4); /* Latar belakang kartu lebih transparan */
             --text-main: #333333; /* Warna teks utama yang gelap */
             --text-subtle: #666666; /* Warna teks sekunder/samar */
-            --accent-1: #08978b; /* Warna aksen utama */
-            --accent-2: #ff6932; /* Warna aksen kedua */
+            --accent-1: #08978b; /* Warna aksen utama (hijau tosca) */
+            --accent-2: #ff6932; /* Warna aksen kedua (oranye), komplementer dengan hijau */
+            --accent-3: #08978b; /* Warna aksen ketiga (biru), selaras dengan hijau tosca */
+            --accent-4: #ff6932; /* Warna aksen keempat (merah), untuk tindakan reset */
             --border-color: rgba(0, 0, 0, 0.1); /* Warna border elemen yang gelap */
             --glass-br: 12px; /* Radius border untuk efek kaca */
             --shadow-light: rgba(0, 0, 0, 0.1);
@@ -34,16 +36,18 @@
             font-family: 'Poppins', sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center; /* Pusatkan konten vertikal di tengah */
             align-items: center;
-            min-height: 100vh;
+            height: 100vh; /* Mengisi seluruh tinggi viewport */
             margin: 0;
             background-color: var(--bg-primary);
             color: var(--text-main);
-            padding: 2em;
+            padding: 1.5em; /* Kurangi padding untuk menghemat ruang */
             box-sizing: border-box;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden; /* Mencegah scrolling pada body */
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
         }
 
         /* Latar belakang dengan gradasi dan noise untuk tema terang */
@@ -80,8 +84,8 @@
         /* --- Kontainer Utama (Card) dengan efek glassmorphism --- */
         .container {
             background: var(--bg-card);
-            backdrop-filter: blur(10px) saturate(180%);
-            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
             border: 1px solid var(--border-color);
             box-shadow: 0 8px 20px var(--shadow-light);
             padding: 2em;
@@ -89,24 +93,29 @@
             text-align: center;
             width: 95%;
             max-width: 900px;
-            transition: all 0.4s ease;
+            /* Perubahan utama untuk membuat card full-height dan terpusat */
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            flex-grow: 1;
-            animation: fadeIn .8s ease-out both;
+            justify-content: center; /* MEMUSATKAN KONTEN SECARA VERTIKAL */
+            align-items: center; /* MEMUSATKAN KONTEN SECARA HORIZONTAL */
+            animation: fadeIn 1.2s ease-out both;
+            margin: 0 auto;
         }
-
-        /* --- Gaya judul utama (h1) --- */
+        
+        /* --- Gaya judul utama (h1) untuk menampung ikon --- */
         h1 {
             font-family: 'Poppins', sans-serif;
             font-size: 1.8em;
             font-weight: 700;
             color: var(--accent-1);
-            text-shadow: 0 0 15px rgba(8, 151, 139, 0.5);
             margin-bottom: 0.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4em;
         }
-
+        
         /* --- Gaya sub-judul --- */
         .subtitle {
             font-family: 'JetBrains Mono', monospace;
@@ -116,24 +125,33 @@
             line-height: 1.5;
         }
 
+        /* --- Gaya untuk teks yang berkedip, tebal, dan miring --- */
+        .blinking-text {
+            color: var(--accent-1);
+            animation: blinker 3s linear infinite;
+            font-weight: bold;
+            font-style: italic;
+        }
+        
         /* --- Kontainer Pratinjau Gambar --- */
         #previews-container {
-            /* Mengubah tata letak menjadi grid untuk menyusun gambar */
             display: grid;
-            /* Mengatur kolom: maksimal 8 kolom dengan lebar yang sama */
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            /* Batas 2 baris */
-            grid-auto-rows: 100px;
-            overflow-y: auto; /* Mengaktifkan scroll vertikal */
-            overflow-x: hidden; /* Menyembunyikan scroll horizontal */
-            height: 220px; /* Tinggi kontainer untuk 2 baris gambar + gap */
+            /* Perubahan untuk memusatkan item-item di dalam grid */
+            place-items: center;
+            /* Ukuran kolom disesuaikan untuk 120px */
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            grid-auto-rows: 120px;
+            overflow-y: auto; /* Memungkinkan scrolling hanya di dalam kontainer ini */
+            overflow-x: hidden;
+            flex-grow: 0;
             gap: 0.8em;
             margin-top: 1.2em;
             padding: 0.5em;
             border-radius: 8px;
-            background-color: transparent; /* Ubah ke transparan */
-            border: 1px dashed var(--border-color); /* Ubah ke dashed border */
+            background-color: transparent;
+            border: 1px dashed var(--border-color);
             transition: border-color 0.3s ease;
+            width: 100%;
         }
 
         /* --- Efek hover/drag pada kontainer pratinjau --- */
@@ -146,9 +164,8 @@
             border: 2px dashed var(--border-color);
             background-color: transparent;
             border-radius: var(--glass-br);
-            /* Atur lebar dan tinggi agar sama dengan kotak pratinjau */
-            width: 100px;
-            height: 100px;
+            width: 105px; /* Lebar tombol disesuaikan */
+            height: 105px; /* Tinggi tombol disesuaikan */
             padding: 0;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -157,7 +174,7 @@
             align-items: center;
             justify-content: center;
             gap: 0.6em;
-            font-size: 0.8em;
+            font-size: 0.9em; /* Ukuran font disesuaikan */
             color: var(--text-subtle);
         }
         
@@ -169,7 +186,7 @@
 
         /* --- Gaya ikon di tombol unggah --- */
         .add-icon {
-            font-size: 1.5em;
+            font-size: 1.8em; /* Ukuran ikon disesuaikan */
             color: var(--accent-1);
             margin-bottom: 0.2em;
         }
@@ -178,7 +195,7 @@
         #add-more-btn p {
             color: var(--text-subtle);
             margin: 0;
-            font-weight: 500;
+            font-size: 0.8em;
             text-align: center;
             font-family: 'JetBrains Mono', monospace;
         }
@@ -191,15 +208,25 @@
         /* --- Gaya setiap kotak pratinjau gambar --- */
         .image-preview {
             position: relative;
-            /* Ukuran tetap, memastikan konsistensi */
-            width: 100px;
-            height: 100px;
+            width: 105px; /* Lebar pratinjau disesuaikan */
+            height: 105px; /* Tinggi pratinjau disesuaikan */
             border: 1px solid var(--border-color);
             border-radius: var(--glass-br);
             overflow: hidden;
             background-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Tambahkan background kotak-kotak untuk pratinjau transparan */
+        .image-preview.checkerboard-background {
+            background-color: #f0f0f0;
+            background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+                              linear-gradient(135deg, #ccc 25%, transparent 25%),
+                              linear-gradient(45deg, transparent 75%, #ccc 75%),
+                              linear-gradient(135deg, transparent 75%, #ccc 75%);
+            background-size: 16px 16px;
+            background-position: 0 0, 8px 0, 8px -8px, 0 8px;
         }
 
         /* --- Efek hover pada kotak pratinjau gambar --- */
@@ -262,13 +289,12 @@
 
         /* --- Kontainer Tombol (Floating Card) --- */
         .floating-button-container {
-            margin-top: 2em;
+            margin-top: 1.5em; /* Kurangi margin untuk menghemat ruang */
             width: 100%;
-            /* Mengubah layout menjadi baris horizontal */
             flex-direction: row;
             gap: 0.8em;
-            justify-content: center; /* Pusatkan tombol secara horizontal */
-            display: flex; /* Selalu tampil */
+            justify-content: center;
+            display: flex;
         }
 
         /* --- Gaya umum untuk semua tombol --- */
@@ -277,10 +303,9 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85em;
+            font-size: 0.9em; /* Ukuran font disesuaikan */
             font-weight: 600;
             transition: all 0.3s ease;
-            /* Membuat tombol memendek dan fleksibel */
             flex-grow: 1;
             display: flex;
             align-items: center;
@@ -310,41 +335,34 @@
             box-shadow: none;
         }
 
-        /* --- Gaya tombol 'Proses Semua Gambar' --- */
+        /* --- Gaya Tombol 'Proses' yang Disesuaikan agar Cocok dengan Oranye --- */
         #process-btn {
-            background-color: var(--accent-1);
+            background-color: var(--accent-2); 
             color: #fff;
         }
-
-        /* --- Efek hover pada tombol proses --- */
         #process-btn:hover:not(:disabled) {
-            background-color: #067a6d; /* Sedikit lebih gelap */
-            box-shadow: 0 6px 16px rgba(8, 151, 139, 0.4);
+            background-color: #E55A29;
+            box-shadow: 0 6px 16px rgba(255, 105, 50, 0.4);
         }
-
-        /* --- Gaya tombol 'Unduh Semua Gambar' --- */
+        
+        /* --- Gaya Tombol 'Unduh Semua' yang Disesuaikan agar Cocok dengan Hijau --- */
         #download-all-btn {
-            background-color: #27ae60;
+            background-color: var(--accent-3);
             color: #fff;
         }
-
-        /* --- Efek hover pada tombol unduh --- */
         #download-all-btn:hover:not(:disabled) {
-            background-color: #219d55;
-            box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4);
+            background-color: #08978B;
+            box-shadow: 0 6px 16px rgba(4, 128, 117, 0.4); 
         }
 
-        /* --- Gaya tombol sekunder (unggah & reset) --- */
-        .secondary-btn {
-            background-color: #f1f5f9;
-            color: #5d6d87;
-            box-shadow: none;
-            border: 1px solid #e2e8f0;
+        /* --- Gaya Tombol 'Reset' yang Disesuaikan agar Cocok dengan Oranye --- */
+        #reset-btn {
+            background-color: var(--accent-4);
+            color: #fff;
         }
-
-        .secondary-btn:hover:not(:disabled) {
-            background-color: #e2e8f0;
-            color: #1a2a4b;
+        #reset-btn:hover:not(:disabled) {
+            background-color: #E55A29;
+            box-shadow: 0 6px 16px rgba(192, 57, 43, 0.4);
         }
 
         /* --- Gaya untuk pesan status --- */
@@ -352,21 +370,30 @@
             margin-top: 1em;
             font-weight: 500;
             min-height: 1em;
-            font-size: 0.85em;
+            font-size: 0.9em; /* Ukuran font disesuaikan */
             text-align: center;
             font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5em;
+        }
+        
+        /* --- Animasi putar dari Font Awesome --- */
+        .fa-spin {
+            animation: fa-spin 1.5s infinite linear;
         }
 
         /* --- Aturan responsif untuk layar kecil --- */
         @media (max-width: 600px) {
             .container {
-                padding: 1.5em;
+                padding: 1em; /* Kurangi padding lebih lanjut */
             }
             .floating-button-container {
-                flex-direction: column; /* Kembalikan ke susunan kolom di layar kecil */
+                flex-direction: column;
             }
             button {
-                width: 100%; /* Lebar penuh di layar kecil */
+                width: 100%;
                 padding: 1em;
             }
         }
@@ -384,11 +411,16 @@
             100% { transform: scale(1); }
         }
 
+        /* --- Animasi berkedip untuk teks 'satu klik' --- */
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+
         /* ================================================= */
-        /* === Gaya Baru untuk Footer (Ditambahkan) === */
+        /* === Gaya Baru untuk Footer (Ditambahkan di dalam Card) === */
         /* ================================================= */
-        .footer {
-            margin-top: 2em;
+        .card-footer {
+            margin-top: 1.5em; /* Kurangi margin untuk menghemat ruang */
             font-size: 0.8em;
             color: var(--text-subtle);
             text-align: center;
@@ -396,11 +428,11 @@
         }
     </style>
 </head>
-<body>
-
+<body onload="document.body.style.opacity='1'">
     <div class="container">
-        <h1>Penghapus Latar Belakang Gambar</h1>
-        <p class="subtitle">Hapus latar belakang gambar secara otomatis dengan satu klik. Dukungan pemrosesan massal.</p>
+        <h1><i class="fas fa-image"></i> Remove BG Otomatis By Tewe</h1>
+        
+        <p class="subtitle">Hapus latar belakang gambar secara otomatis dengan <span class="blinking-text">satu klik.</span> Dukungan pemrosesan sekaligus.</p>
 
         <div id="previews-container">
             <div id="add-more-btn">
@@ -411,7 +443,7 @@
 
         <input type="file" id="file-input" accept="image/*" multiple>
 
-        <p id="message"></p>
+        <p id="message">Maksimal unggahan 6 gambar sekali proses.</p>
 
         <div class="floating-button-container">
             <button id="process-btn" disabled>
@@ -420,15 +452,15 @@
             <button id="download-all-btn" style="display: none;" disabled>
                 <i class="fas fa-download"></i> Unduh Semua
             </button>
-            <button id="reset-btn" class="secondary-btn" disabled>
+            <button id="reset-btn" disabled>
                 <i class="fas fa-redo-alt"></i> Reset
             </button>
         </div>
-    </div>
 
-    <footer class="footer">
-        <p>Copyright &copy; 2025 By Tewe Tech</p>
-    </footer>
+        <div class="card-footer">
+            <p>Copyright &copy; 2025 | Tewe Tech | 0823-2362-4177</p>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 
@@ -445,60 +477,100 @@
         const downloadAllBtn = document.getElementById('download-all-btn');
         const resetBtn = document.getElementById('reset-btn');
         const message = document.getElementById('message');
-        // Elemen progress bar dihilangkan dari JavaScript
-        // const progressBarContainer = document.getElementById('file-progress');
-        // const progressBar = document.getElementById('progress-bar');
 
-        // --- Kunci API untuk layanan Remove.bg ---
-const API_KEYS = [
-    'PLW8nQn1D2tikgCNQ6xRchz9',
-    'qoRMdDheqRecWxddnhNc21tH',
-    'DNscMV4A9iTFhvognnHGHScV',
-    'ydFzqdf6qmhVqGXusWMweytA',
-    'CM1h3dkQu2J4ovhrANw2n8X7',
-    'yJqd8MpdN4JB4kXGNodCbSJj',
-    'deEN2b2RQx2bUJ5B3cegtLWN',
-    '5DZyStCQx1UiQ1E9kiXTSCwA',
-    '7kCJeuDC5ePat6y7bD9hTbRJ',
-    'Xm5qRZfCdaNHQejMds5Chjai',
-    'SUowmFy4Uyd3gYrwikq4qZxE',
-    'tTH31tW1z21MHgutPphbc494',
-    'tGyFUypek5i5GMoZPdG8BvDU',
-    'dmSaWfbkTEpfD4rERdMxinuT',
-    '5s7Yy7yaqB53TFvh7Hg216Hr',
-    'CfowZPj4ztkRSs6Dgw8BXB7b'
-];
+        // --- Kunci API untuk layanan Remove.bg (digunakan secara bergantian) ---
+        // Catatan: Kunci API ini terbatas, disarankan untuk menggunakan kunci pribadi atau layanan backend.
+        const API_KEYS = [
+            'PLW8nQn1D2tikgCNQ6xRchz9',
+            'qoRMdDheqRecWxddnhNc21tH',
+            'DNscMV4A9iTFhvognnHGHScV',
+            'ydFzqdf6qmhVqGXusWMweytA',
+            'CM1h3dkQu2J4ovhrANw2n8X7',
+            'yJqd8MpdN4JB4kXGNodCbSJj',
+            'deEN2b2RQx2bUJ5B3cegtLWN',
+            '5DZyStCQx1UiQ1E9kiXTSCwA',
+            '7kCJeuDC5ePat6y7bD9hTbRJ',
+            'Xm5qRZfCdaNHQejMds5Chjai',
+            'SUowmFy4Uyd3gYrwikq4qZxE',
+            'tTH31tW1z21MHgutPphbc494',
+            'tGyFUypek5i5GMoZPdG8BvDU',
+            'dmSaWfbkTEpfD4rERdMxinuT',
+            '5s7Yy7yaqB53TFvh7Hg216Hr',
+            'CfowZPj4ztkRSs6Dgw8BXB7b'
+        ];
 
-        // Inisialisasi array untuk menyimpan file yang dipilih dan gambar yang sudah diproses
+        // Konstanta untuk batas unggahan maksimal
+        const MAX_UPLOAD = 6;
+        const INITIAL_MESSAGE = "Maksimal unggahan 6 gambar sekali proses.";
+
+        // Inisialisasi array untuk menyimpan objek file yang dipilih dan statusnya
         let selectedFiles = [];
-        let processedImages = [];
         let isProcessing = false;
 
         // --- Fungsi untuk menampilkan pesan status kepada pengguna ---
         function showMessage(msg, isError = false) {
+            message.innerHTML = '';
             message.textContent = msg;
-            message.style.color = isError ? '#e74c3c' : '#27ae60';
+            message.style.color = isError ? '#e74c3c' : '#08978b';
         }
 
-        // --- Fungsi untuk memperbarui status tombol (enabled/disabled) ---
+        // --- Fungsi untuk menampilkan animasi tunggu (loading spinner) ---
+        function showLoadingMessage(msg) {
+            message.innerHTML = '';
+            message.style.color = '#08978b';
+
+            const spinnerIcon = document.createElement('i');
+            spinnerIcon.className = 'fas fa-spinner fa-spin';
+
+            const textSpan = document.createElement('span');
+            textSpan.textContent = msg;
+
+            message.appendChild(spinnerIcon);
+            message.appendChild(textSpan);
+        }
+
+        // --- Fungsi untuk memperbarui status tombol (enabled/disabled) dan pesan status ---
         function updateButtonStates() {
+            // Cek apakah ada file yang telah dipilih
             const hasFiles = selectedFiles.length > 0;
+
+            // Aktifkan tombol 'Proses' jika ada file dan tidak sedang memproses
             processBtn.disabled = !hasFiles || isProcessing;
+            // Aktifkan tombol 'Reset' jika ada file
             resetBtn.disabled = !hasFiles;
             
-            // Tampilkan tombol unduh jika ada gambar yang berhasil diproses
-            if (processedImages.length > 0) {
+            // Cek apakah ada gambar yang sudah selesai diproses
+            const hasProcessedImages = selectedFiles.some(file => file.status === 'Selesai');
+            // Tampilkan dan aktifkan tombol 'Unduh Semua' jika ada gambar yang sudah selesai
+            if (hasProcessedImages) {
                 downloadAllBtn.style.display = 'flex';
                 downloadAllBtn.disabled = false;
             } else {
                 downloadAllBtn.style.display = 'none';
                 downloadAllBtn.disabled = true;
             }
+
+            // Atur visibilitas tombol "Tambahkan Gambar"
+            addMoreBtn.style.display = selectedFiles.length < MAX_UPLOAD ? 'flex' : 'none';
+
+            // Perbarui pesan status
+            if (selectedFiles.length === 0 && !isProcessing) {
+                showMessage(INITIAL_MESSAGE);
+            } else if (!isProcessing) {
+                showMessage(`${selectedFiles.length} dari ${MAX_UPLOAD} gambar siap diproses.`);
+            }
         }
 
         // --- Fungsi untuk menambahkan pratinjau gambar baru ke UI ---
         function addPreviews(files) {
+            // Filter hanya file gambar
             const fileArray = Array.from(files).filter(file => file.type.startsWith('image/'));
+            
+            // Periksa jika unggahan melebihi batas
+            if (selectedFiles.length + fileArray.length > MAX_UPLOAD) {
+                showMessage(`Unggahan gagal. Maksimal hanya ${MAX_UPLOAD} gambar yang diperbolehkan.`, true);
+                return;
+            }
 
             if (fileArray.length === 0) {
                 showMessage('Hanya file gambar yang didukung.', true);
@@ -506,16 +578,22 @@ const API_KEYS = [
             }
 
             fileArray.forEach(file => {
-                // Pastikan file belum ada di daftar
-                if (!selectedFiles.some(f => f.name === file.name)) {
-                    selectedFiles.push(file);
+                // Hindari duplikasi file
+                if (!selectedFiles.some(f => f.file.name === file.name && f.file.size === file.size)) {
+                    // Simpan objek yang berisi file asli, status, dan URL pratinjau
+                    const fileObject = {
+                        file: file,
+                        status: 'Terupload',
+                        previewUrl: null
+                    };
+                    selectedFiles.push(fileObject);
 
-                    // Buat elemen pembungkus pratinjau
+                    // Buat elemen HTML untuk pratinjau gambar
                     const previewWrapper = document.createElement('div');
                     previewWrapper.className = 'image-preview';
                     previewWrapper.setAttribute('data-file-name', file.name);
+                    previewWrapper.setAttribute('data-file-size', file.size);
 
-                    // Buat elemen gambar
                     const img = document.createElement('img');
                     const reader = new FileReader();
                     reader.onload = (e) => {
@@ -523,12 +601,10 @@ const API_KEYS = [
                     };
                     reader.readAsDataURL(file);
 
-                    // Buat elemen status
                     const statusSpan = document.createElement('span');
                     statusSpan.className = 'status';
                     statusSpan.textContent = 'Terupload';
 
-                    // Buat tombol hapus
                     const closeBtn = document.createElement('i');
                     closeBtn.className = 'fas fa-times close-btn';
 
@@ -538,47 +614,56 @@ const API_KEYS = [
                         removeImage(previewWrapper);
                     });
 
-                    // Susun elemen-elemen di dalam pembungkus pratinjau
+                    // Susun elemen pratinjau
                     previewWrapper.appendChild(closeBtn);
                     previewWrapper.appendChild(img);
                     previewWrapper.appendChild(statusSpan);
 
-                    // Tambahkan pratinjau sebelum tombol 'Tambah Gambar'
+                    // Sisipkan pratinjau baru sebelum tombol 'Tambahkan Gambar'
                     previewsContainer.insertBefore(previewWrapper, addMoreBtn);
                 }
             });
 
             updateButtonStates();
-            showMessage(`${selectedFiles.length} gambar siap diproses.`);
         }
 
         // --- Fungsi untuk menghapus gambar dari UI dan array data ---
         function removeImage(previewElement) {
             const fileName = previewElement.getAttribute('data-file-name');
+            const fileSize = previewElement.getAttribute('data-file-size');
+            const fileIndex = selectedFiles.findIndex(f => f.file.name === fileName && f.file.size == fileSize);
 
-            // Hapus file dari array yang dipilih
-            selectedFiles = selectedFiles.filter(file => file.name !== fileName);
-
-            // Hapus gambar dari array yang sudah diproses
-            processedImages = processedImages.filter(img => !img.name.startsWith(fileName.replace(/\.[^/.]+$/, "")));
-
+            if (fileIndex > -1) {
+                // Hapus URL blob untuk menghemat memori
+                if (selectedFiles[fileIndex].previewUrl) {
+                    URL.revokeObjectURL(selectedFiles[fileIndex].previewUrl);
+                }
+                // Hapus objek file dari array
+                selectedFiles.splice(fileIndex, 1);
+            }
+            
             // Hapus elemen pratinjau dari DOM
             previewElement.remove();
-
-            showMessage(`${selectedFiles.length} gambar tersisa.`);
             updateButtonStates();
         }
 
         // --- Fungsi untuk mereset tampilan ke kondisi awal ---
         function resetApp() {
-            // Hapus semua pratinjau kecuali tombol 'Tambah Gambar'
+            // Hapus semua pratinjau yang ada
             const previews = previewsContainer.querySelectorAll('.image-preview');
-            previews.forEach(preview => preview.remove());
+            previews.forEach(preview => {
+                const fileName = preview.getAttribute('data-file-name');
+                const fileSize = preview.getAttribute('data-file-size');
+                const fileObject = selectedFiles.find(f => f.file.name === fileName && f.file.size == fileSize);
+                if (fileObject && fileObject.previewUrl) {
+                    URL.revokeObjectURL(fileObject.previewUrl);
+                }
+                preview.remove();
+            });
             
+            // Reset semua array dan variabel
             selectedFiles = [];
-            processedImages = [];
-            fileInput.value = null; // Reset input file
-            showMessage('');
+            fileInput.value = null;
             isProcessing = false;
             updateButtonStates();
         }
@@ -588,10 +673,14 @@ const API_KEYS = [
             fileInput.click();
         });
         
-        // --- Event Listener untuk area drop (saat file di-drag & drop) di dalam kontainer pratinjau ---
+        // --- Event Listener untuk area drop (saat file di-drag & drop) ---
         previewsContainer.addEventListener('dragover', (e) => {
             e.preventDefault();
-            previewsContainer.classList.add('dragover');
+            if (selectedFiles.length < MAX_UPLOAD) {
+                previewsContainer.classList.add('dragover');
+            } else {
+                showMessage(`Unggahan gagal. Maksimal hanya ${MAX_UPLOAD} gambar yang diperbolehkan.`, true);
+            }
         });
 
         previewsContainer.addEventListener('dragleave', () => {
@@ -609,22 +698,44 @@ const API_KEYS = [
             addPreviews(e.target.files);
         });
 
-        // --- Fungsi utama untuk memproses gambar menggunakan API ---
-        async function processImage(file, statusSpan, previewWrapper) {
-            let attempt = 0;
-            const originalFileName = file.name.replace(/\.[^/.]+$/, "");
+        // --- Event listener untuk menempelkan gambar dari clipboard (Ctrl+V) ---
+        document.addEventListener('paste', (e) => {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            // Periksa apakah batasan unggahan sudah tercapai
+            if (selectedFiles.length >= MAX_UPLOAD) {
+                showMessage(`Unggahan gagal. Maksimal hanya ${MAX_UPLOAD} gambar yang diperbolehkan.`, true);
+                return;
+            }
+            for (let item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    const blob = item.getAsFile();
+                    // Membuat objek File baru dari blob untuk konsistensi
+                    const file = new File([blob], `pasted_image_${Date.now()}.png`, { type: 'image/png' });
+                    // Menambahkan file ke dalam pratinjau
+                    addPreviews([file]);
+                    showMessage('Gambar dari clipboard berhasil ditambahkan.');
+                    return;
+                }
+            }
+            showMessage('Teks atau data non-gambar dari clipboard tidak didukung.', true);
+        });
 
-            // Coba setiap kunci API hingga berhasil
+        // --- Fungsi utama untuk memproses gambar menggunakan API ---
+        async function processImage(fileObject, statusSpan, previewWrapper) {
+            let attempt = 0;
+            // Loop untuk mencoba setiap kunci API sampai berhasil
             while (attempt < API_KEYS.length) {
                 const currentKey = API_KEYS[attempt];
-                statusSpan.textContent = `Memproses...`; // Teks status yang lebih sederhana
+                statusSpan.textContent = `Memproses...`;
 
                 try {
+                    // Buat FormData untuk mengirim file
                     const formData = new FormData();
-                    formData.append('image_file', file);
-                    formData.append('size', 'auto');
+                    formData.append('image_file', fileObject.file);
+                    formData.append('size', 'preview'); // Menggunakan 'preview' untuk pratinjau cepat
                     formData.append('format', 'png');
 
+                    // Kirim permintaan ke API remove.bg
                     const response = await fetch('https://api.remove.bg/v1.0/removebg', {
                         method: 'POST',
                         headers: {
@@ -633,53 +744,75 @@ const API_KEYS = [
                         body: formData
                     });
 
-                    // Periksa jika respons tidak berhasil
+                    // Tangani respons jika tidak berhasil
                     if (!response.ok) {
                         const errorData = await response.json();
+                        // Jika kunci API tidak valid atau limit tercapai, coba kunci API berikutnya
                         if (response.status === 403 || response.status === 429) {
-                            throw new Error('Kunci API tidak valid atau limit telah tercapai.');
+                            throw new Error('Kunci API tidak valid atau limit telah tercapai. Mencoba kunci lain.');
                         } else {
                             throw new Error(errorData.errors[0]?.title || 'Gagal menghapus latar belakang.');
                         }
                     }
 
+                    // Jika respons berhasil, dapatkan URL gambar
                     const imageBlob = await response.blob();
                     const imageUrl = URL.createObjectURL(imageBlob);
 
-                    // Perbarui tampilan pratinjau dengan gambar baru
+                    // Perbarui pratinjau gambar dengan hasil dari API
                     const previewImg = previewWrapper.querySelector('img');
                     previewImg.src = imageUrl;
                     statusSpan.textContent = 'Selesai!';
-                    statusSpan.style.backgroundColor = '#1abc9c';
-
-                    // Simpan gambar yang sudah diproses
-                    processedImages.push({
-                        name: originalFileName + '-no-bg.png',
-                        blob: imageBlob
-                    });
-
-                    return true; // Berhasil, keluar dari loop
+                    statusSpan.style.backgroundColor = '#08978B';
+                    previewWrapper.classList.add('checkerboard-background');
+                    
+                    // Simpan URL pratinjau dan blob untuk nanti diunduh
+                    fileObject.previewUrl = imageUrl;
+                    fileObject.processedBlob = imageBlob;
+                    
+                    // Ubah status file menjadi 'Selesai'
+                    fileObject.status = 'Selesai';
+                    
+                    return true; // Berhasil
                 } catch (error) {
                     console.error('Error:', error);
-                    attempt++; // Coba kunci API berikutnya
+                    attempt++;
+                    // Jika semua kunci API gagal, tandai sebagai gagal
                     if (attempt >= API_KEYS.length) {
                         statusSpan.textContent = 'Gagal';
                         statusSpan.style.backgroundColor = '#e74c3c';
-                        return false; // Gagal, keluar dari loop
+                        fileObject.status = 'Gagal';
+                        return false;
                     }
                 }
             }
         }
 
-        // --- Fungsi untuk memulai unduhan semua gambar yang berhasil diproses ---
+        // --- Fungsi untuk mengunduh satu gambar dari pratinjau yang sudah ada ---
+        function downloadProcessedImage(fileObject) {
+            // Cek apakah ada blob yang sudah diproses
+            if (fileObject.processedBlob) {
+                const originalFileName = fileObject.file.name.replace(/\.[^/.]+$/, "");
+                // Gunakan FileSaver.js untuk mengunduh blob
+                saveAs(fileObject.processedBlob, originalFileName + '-no-bg.png');
+            } else {
+                showMessage(`Gambar ${fileObject.file.name} belum diproses atau gagal.`, true);
+            }
+        }
+
+        // --- Fungsi untuk memulai proses unduhan semua gambar yang berhasil diproses ---
         function triggerDownloads() {
-            if (processedImages.length === 0) {
+            // Filter hanya file yang statusnya 'Selesai' dan punya blob hasil proses
+            const filesToDownload = selectedFiles.filter(file => file.status === 'Selesai' && file.processedBlob);
+            
+            if (filesToDownload.length === 0) {
                 showMessage('Tidak ada gambar yang berhasil diproses untuk diunduh.', true);
                 return;
             }
 
-            for (const image of processedImages) {
-                saveAs(image.blob, image.name);
+            // Unduh setiap gambar satu per satu
+            for (const fileObject of filesToDownload) {
+                downloadProcessedImage(fileObject);
             }
             showMessage('Semua unduhan telah dimulai!');
         }
@@ -692,36 +825,41 @@ const API_KEYS = [
             }
 
             isProcessing = true;
-            updateButtonStates(); // Nonaktifkan tombol
-            processedImages = []; // Reset array gambar yang diproses
+            updateButtonStates();
 
             let successfulCount = 0;
             const totalFiles = selectedFiles.length;
 
-            // Loop untuk memproses setiap file
+            // Proses setiap file secara berurutan
             for (let i = 0; i < totalFiles; i++) {
-                const file = selectedFiles[i];
-                const previewWrapper = previewsContainer.children[i];
+                const fileObject = selectedFiles[i];
+                // Temukan elemen pratinjau yang sesuai
+                const previewWrapper = document.querySelector(`.image-preview[data-file-name="${fileObject.file.name}"][data-file-size="${fileObject.file.size}"]`);
+                if (!previewWrapper) continue;
                 const statusSpan = previewWrapper.querySelector('.status');
+                
+                // Jika file sudah selesai diproses, lewati
+                if (fileObject.status === 'Selesai') {
+                    successfulCount++;
+                    continue;
+                }
 
-                // Memperbarui pesan status sesuai dengan progres
-                showMessage(`Memproses Gambar ${i + 1}/${totalFiles}, harap tunggu...`);
-
-                // Panggil fungsi proses gambar dan tunggu hingga selesai
-                const success = await processImage(file, statusSpan, previewWrapper);
+                // Menampilkan progress spesifik
+                showLoadingMessage(`Memproses ${i + 1} dari ${totalFiles} gambar...`);
+                
+                const success = await processImage(fileObject, statusSpan, previewWrapper);
                 if (success) {
                     successfulCount++;
                 }
             }
 
             isProcessing = false;
-
             if (successfulCount > 0) {
                 showMessage(`Proses selesai! ${successfulCount} dari ${totalFiles} gambar berhasil diproses dan siap diunduh.`);
             } else {
                 showMessage('Tidak ada gambar yang berhasil diproses. Silakan coba lagi.', true);
             }
-            updateButtonStates(); // Aktifkan tombol yang relevan
+            updateButtonStates();
         });
 
         // --- Event listener untuk tombol 'Unduh Semua Gambar' ---
